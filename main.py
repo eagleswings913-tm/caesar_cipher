@@ -5,7 +5,7 @@ users_message = ''
 users_encoded_message = ''
 users_decoded_message = ''
 shift_number = 0
-shift_number_range = [str(x) for x in range(1, 26)]
+shift_number_range = [str(x) for x in range(0, 37)]
 characters = [chr(i) for i in range(ord('a'), ord('z') + 1)]
 numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 characters.extend(numbers)
@@ -23,34 +23,50 @@ while continue_play:
 
     users_message = input('Enter your message: ')
     while True:
-        shift_number = input('Enter cipher shift number: (1 - 36) ')
+        shift_number = input('Enter cipher shift number: (0 - 36) ')
+        print(shift_number)
+        print(shift_number_range)
         if shift_number in shift_number_range:
             shift_number = int(shift_number)
             break
         else:
-            print('Invalid shift number! Please enter a number between 1 and 36')
-
-    # create encoded message
-    for letter in users_message:
-        if letter in exclusions:
-            users_encoded_message += letter
-        elif letter not in characters:
-            pass
-        else:
-            index = characters.index(letter)
-            if index + shift_number > 35:
-                users_encoded_message = users_encoded_message + characters[index + shift_number - 36]
+            print('Invalid shift number! Please enter a number between 0 and 36')
+    if action == 'encode':
+        # create encoded message
+        for letter in users_message:
+            if letter in exclusions:
+                users_encoded_message += letter
+            elif letter not in characters:
+                pass
             else:
-                users_encoded_message = users_encoded_message + characters[index + shift_number]
+                index = characters.index(letter)
+                if index + shift_number > 35:
+                    users_encoded_message = users_encoded_message + characters[index + shift_number - 36]
+                else:
+                    users_encoded_message = users_encoded_message + characters[index + shift_number]
 
-    print(f'Here is your encoded message: {users_encoded_message}')
-    # print(characters)
+        print(f'Here is your encoded message: {users_encoded_message}')
+    else:
+        # decode message
+        for letter in users_message:
+            if letter in exclusions:
+                users_decoded_message += letter
+            elif letter not in characters:
+                pass
+            else:
+                index = characters.index(letter)
+                if index - shift_number < 0:
+                    users_decoded_message = users_decoded_message + characters[index - shift_number + 36]
+                else:
+                    users_decoded_message = users_decoded_message + characters[index - shift_number]
+        print(f'Here is your decoded message: {users_decoded_message}')
     if input('Do you want to play again? (y/n): ').lower() == 'n':
         continue_play = False
     else:
         action = ''
         users_message = ''
         users_encoded_message = ''
+        users_decoded_message = ''
         shift_number = 0
 print('Thank you for playing!')
 
